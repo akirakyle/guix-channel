@@ -743,6 +743,7 @@ be generated with ease.")))
         texlive-physics
         texlive-braket
         texlive-revtex
+        texlive-amsfonts
         texlive-etoolbox
         texlive-latex-trimspaces
         texlive-xcolor
