@@ -145,7 +145,7 @@ control.  https://github.com/fuxialexander/org-pdftools/")
   (package-commit emacs-vterm "a940dd2ee8a82684860e320c0f6d5e15d31d916f"
                   "0r1iz92sn2ddi11arr9s8z7cdpjli7pn55yhaswvp4sdch7chb5r"))
 
-(define %emacs-packages-replacements
+(define %emacs-package-replacements
   `((,emacs-pdf-tools . ,emacs-pdf-tools-latest)
     (,emacs-org-roam . ,emacs-org-roam-with-emacssql)
     (,emacs-all-the-icons . ,emacs-all-the-icons-latest)
@@ -154,7 +154,7 @@ control.  https://github.com/fuxialexander/org-pdftools/")
     (,emacs-vterm . ,emacs-vterm-latest)))
 
 (define-public with-akira-emacs-packages
-  (package-input-rewriting %emacs-packages-replacements))
+  (package-input-rewriting %emacs-package-replacements))
 
 (define-public %all-my-emacs-packages
   (map with-akira-emacs-packages
@@ -166,5 +166,6 @@ control.  https://github.com/fuxialexander/org-pdftools/")
              emacs-pdf-tools-latest
              emacs-org-pdftools
              emacs-magit
+             emacs-geiser-guile
              mu
              )))
