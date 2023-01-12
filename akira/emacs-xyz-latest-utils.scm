@@ -6,8 +6,7 @@
   #:use-module (guix git-download)
   #:use-module (guix hash)
   #:use-module (guix base32)
-  #:use-module (guix packages)
-  #:use-module (guix read-print))
+  #:use-module (guix packages))
 
 (define (latest-commit-and-hash pkg)
   (unless (eq? git-fetch (origin-method (package-source pkg)))
@@ -23,13 +22,7 @@
    (bytevector->nix-base32-string
     (file-hash* checkout #:recursive? #true #:select? (const #true)))))
 
-(define (package-latest sym pkg)
-  (let ((new-sym (symbol-append sym '-latest)))
-    (cons sym (cons new-sym
-                    `(define-public ,new-sym
-                       (package-commit ,sym ,@(latest-commit-and-hash pkg)))))))
-
-(define (package-latest-handler el)
+(define (mk-pkg-commit-hash el)
   (with-exception-handler
       (lambda (e)
         (format #t "error for package: ~A\nexception: ~A\n" (car el) e)
@@ -37,27 +30,14 @@
     (lambda ()
       (let ((sym (car el))
             (pkg (variable-ref (cdr el))))
-        (package-latest sym pkg)))
+        (cons sym (latest-commit-and-hash pkg))))
     #:unwind? #t))
-
-(define (make-replacements-helper el)
-  (let ((sym (car el))
-        (new-sym (cadr el)))
-    ``(cons ,,sym ,,new-sym)))
-
-(define (make-replacements pkgs)
-  `((define-public %emacs-package-latest-replacements
-      (list ,@(map make-replacements-helper pkgs)))))
 
 (define-public (latest-emacs-xyz file)
   (let* ((emacs-packages
           (module-map (lambda (sym var) (cons sym var))
                       (resolve-module '(gnu packages emacs-xyz))))
-         (packages-latest ;(filter-map package-latest-handler emacs-packages))
-         (filter-map package-latest-handler (take emacs-packages 10)))
-         (defs (map cddr packages-latest))
-         (replacements (make-replacements packages-latest)))
+         (pkg-data (filter-map mk-pkg-commit-hash (take emacs-packages 10))))
+    ;;(pkg-data (filter-map mk-pkg-commit-hash emacs-packages)))
     (with-atomic-file-output file
-      (lambda (port)
-        (pretty-print-with-comments/splice port defs)
-        (pretty-print-with-comments/splice port replacements)))))
+      (lambda (port) (format port "(\n~{~s\n~})" pkg-data)))))
