@@ -86,6 +86,8 @@
        (file-name (git-file-name name version))
        (patches
           (list (local-file "emacs-jupyter.patch")))
+;; https://github.com/nnicandro/emacs-jupyter/issues/380
+;; can be triggered with raise Exception in python block
        (sha256
         (base32 "183313jlmfnbndczllkqm47y4495prw4ks2jav3pdwn5qqfmpznx"))))
     (propagated-inputs (modify-inputs (package-propagated-inputs emacs-jupyter)
@@ -145,6 +147,12 @@ control.  https://github.com/fuxialexander/org-pdftools/")
   (package-commit emacs-vterm "a940dd2ee8a82684860e320c0f6d5e15d31d916f"
                   "0r1iz92sn2ddi11arr9s8z7cdpjli7pn55yhaswvp4sdch7chb5r"))
 
+
+(define-public mu-latest
+  (package-commit mu
+                  "c23dad70586bbb54891c506629f2ce2ed8e463d2"
+                  "1idzamhpfgcdiwap20s3cc258kawxa1k46c4s79xslfbdqy0abdy"))
+
 (define %emacs-package-replacements
   `((,emacs-pdf-tools . ,emacs-pdf-tools-latest)
     (,emacs-org-roam . ,emacs-org-roam-with-emacssql)
@@ -167,5 +175,5 @@ control.  https://github.com/fuxialexander/org-pdftools/")
              emacs-org-pdftools
              emacs-magit
              emacs-geiser-guile
-             mu
+             mu-latest
              )))
