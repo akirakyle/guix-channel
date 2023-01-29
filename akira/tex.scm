@@ -731,6 +731,26 @@ from TikZ in order to automate the placement of many vertices.  tikz-feynman
 allows fine-tuned placement of vertices so that even complex diagrams can still
 be generated with ease.")))
 
+
+(define-public texlive-tensor
+  (package
+    (inherit (simple-texlive-package "texlive-tensor"
+                                     (list "doc/latex/tensor/"
+                                           "source/latex/tensor/"
+                                           "tex/latex/tensor/")
+                                     (base32
+                                      "0rc3mswkwlacfwcz2dbvl3glkwkkyji8aiqa837wr0h8rd7jfl2g")
+                                     #:trivial? #t))
+    (home-page "https://ctan.org/macros/latex/contrib/tensor")
+    (synopsis "Typeset tensors")
+    (description
+     "This package provides a package which allows the user to set tensor-style super-
+and subscripts with offsets between successive indices.  It supports the
+typesetting of tensors with mixed upper and lower indices with spacing, also
+typset preposed indices.  This is a complete revision and extension of the
+original tensor package by Mike Piff.")
+    (license lppl)))
+
 (define-public %all-my-latex-packages
   (list texlive-base
         texlive-luatexbase
@@ -798,4 +818,5 @@ be generated with ease.")))
 
         texlive-carlisle ; for slashed.sty
         texlive-tikz-feynman
+        texlive-tensor
         ))
