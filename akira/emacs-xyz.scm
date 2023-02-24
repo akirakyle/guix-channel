@@ -9,7 +9,7 @@
   #:use-module (emacs-latest utils)
   #:use-module (emacs-latest emacs-xyz))
 
-;; TODO upstream this
+;; TODO upstream these
 (define-public emacs-org-pdftools
   (package
     (name "emacs-org-pdftools")
@@ -58,7 +58,6 @@ control.  https://github.com/fuxialexander/org-pdftools/")
   apply a function to it.")
     (license license:gpl3+)))
 
-
 (define-public emacs-aas
   (package
     (name "emacs-aas")
@@ -82,11 +81,6 @@ sequence. Its like running a long prefix command, but the keys you type are not
 then the snippet is triggered!")
     (license license:gpl3+)))
 
-(define-public mu-latest
-  (package-commit mu
-                  "c23dad70586bbb54891c506629f2ce2ed8e463d2"
-                  "0hy6vxsj18wdghgc7h5v3asw23j5cnr0vamk7x8idg74n75sg6nm"))
-
 (define-public my-emacs-jupyter
   (package
     (inherit (emacs-xyz-latest emacs-jupyter))
@@ -101,68 +95,80 @@ then the snippet is triggered!")
                          (delete "emacs-company")
                          (delete "emacs-markdown-mode")))))
 
-;; TODO: add my patches for emacs-org
+(define-public my-emacs-org
+  (package
+    (inherit (emacs-xyz-latest emacs-org))
+    (source
+     (origin
+       (inherit (package-source (emacs-xyz-latest emacs-org)))
+       (patches (list (local-file "emacs-org.patch")))))))
+
+;(define-public mu-latest
+;  (package-commit mu
+;                  "c23dad70586bbb54891c506629f2ce2ed8e463d2"
+;                  "0hy6vxsj18wdghgc7h5v3asw23j5cnr0vamk7x8idg74n75sg6nm"))
+
+(define-public my-emacs-replacements
+  (package-input-rewriting
+   `((,(emacs-xyz-latest emacs-jupyter) . ,my-emacs-jupyter)
+     (,(emacs-xyz-latest emacs-org) . ,my-emacs-org))))
 
 (define-public %all-my-emacs-packages
-  ;(append 
-   ;(map emacs-xyz-latest
-   (map with-emacs-xyz-latest
-        (list
-         emacs-use-package
-         emacs-doom-themes
-         emacs-doom-modeline
-         emacs-general
-         emacs-which-key
-         emacs-undo-tree
-         emacs-evil
-         emacs-evil-collection
-         emacs-evil-matchit
-         emacs-evil-surround
-         emacs-evil-tex
-         emacs-evil-org
-         emacs-avy
-         emacs-ace-link
-         emacs-ace-window
-         emacs-vertico
-         emacs-orderless
-         emacs-consult
-         emacs-consult-flyspell
-         emacs-flyspell-correct
-         emacs-consult-eglot
-         emacs-marginalia
-         emacs-embark
-         emacs-corfu
-         emacs-cape
-         emacs-tempel
-         emacs-kind-icon
-         emacs-rainbow-delimiters
-         emacs-smartparens
-         emacs-aas
-         emacs-org
-         emacs-org-roam
-         emacs-org-contrib
-         emacs-htmlize
-         emacs-citeproc-el
-         emacs-citar
-         emacs-citar-org-roam
-         emacs-all-the-icons-completion
-         emacs-direnv
-         emacs-pass
-         emacs-vterm
-         emacs-pdf-tools
-         emacs-magit
-         emacs-auctex
-         emacs-geiser-guile
-         emacs-julia-mode
-         emacs-haskell-mode
-         emacs-markdown-mode
-         emacs-json-mode
-         emacs-gcmh
-         ;))
-   ;(map with-emacs-xyz-latest
-        ;(list
-         my-emacs-jupyter
-         emacs-org-pdftools
-         mu-latest
-         )))
-         ;))))
+  (map my-emacs-replacements
+    (map emacs-xyz-latest
+      (list
+       emacs-use-package
+       emacs-doom-themes
+       emacs-doom-modeline
+       emacs-general
+       emacs-which-key
+       emacs-undo-tree
+       emacs-evil
+       emacs-evil-collection
+       emacs-evil-matchit
+       emacs-evil-surround
+       emacs-evil-tex
+       emacs-evil-org
+       emacs-avy
+       emacs-ace-link
+       emacs-ace-window
+       emacs-vertico
+       emacs-orderless
+       emacs-consult
+       emacs-consult-flyspell
+       emacs-flyspell-correct
+       emacs-consult-eglot
+       emacs-marginalia
+       emacs-embark
+       emacs-corfu
+       emacs-cape
+       emacs-tempel
+       emacs-kind-icon
+       emacs-rainbow-delimiters
+       emacs-smartparens
+       emacs-aas
+       emacs-org
+       emacs-org-roam
+       emacs-org-contrib
+       emacs-org-pdftools
+       emacs-htmlize
+       emacs-citeproc-el
+       emacs-citar
+       emacs-citar-org-roam
+       emacs-all-the-icons-completion
+       emacs-direnv
+       emacs-buffer-env
+       emacs-pass
+       emacs-vterm
+       emacs-pdf-tools
+       emacs-magit
+       emacs-auctex
+       emacs-geiser-guile
+       emacs-julia-mode
+       emacs-haskell-mode
+       emacs-markdown-mode
+       emacs-json-mode
+       emacs-gcmh
+       emacs-jupyter
+       mu
+       ))))
