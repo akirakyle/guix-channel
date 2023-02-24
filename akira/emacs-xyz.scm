@@ -103,6 +103,17 @@ then the snippet is triggered!")
        (inherit (package-source (emacs-xyz-latest emacs-org)))
        (patches (list (local-file "emacs-org.patch")))))))
 
+
+(define-public my-emacs-flyspell-correct
+  (package
+    (inherit (emacs-xyz-latest emacs-flyspell-correct))
+    (arguments `(#:include '("^flyspell-correct.el$")))
+    (propagated-inputs (modify-inputs (package-propagated-inputs
+                                       (emacs-xyz-latest emacs-flyspell-correct))
+                         (delete "emacs-helm")
+                         (delete "emacs-ivy")
+                         (delete "emacs-popup")))))
+
 ;(define-public mu-latest
 ;  (package-commit mu
 ;                  "c23dad70586bbb54891c506629f2ce2ed8e463d2"
@@ -111,13 +122,13 @@ then the snippet is triggered!")
 (define-public my-emacs-replacements
   (package-input-rewriting
    `((,(emacs-xyz-latest emacs-jupyter) . ,my-emacs-jupyter)
+     (,(emacs-xyz-latest emacs-flyspell-correct) . ,my-emacs-flyspell-correct)
      (,(emacs-xyz-latest emacs-org) . ,my-emacs-org))))
 
 (define-public %all-my-emacs-packages
   (map my-emacs-replacements
     (map emacs-xyz-latest
       (list
-       emacs-use-package
        emacs-doom-themes
        emacs-doom-modeline
        emacs-general
