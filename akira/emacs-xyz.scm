@@ -101,7 +101,8 @@ then the snippet is triggered!")
     (source
      (origin
        (inherit (package-source (emacs-xyz-latest emacs-org)))
-       (patches (list (local-file "emacs-org.patch")))))))
+       (patches (list (local-file "emacs-org-ob-latex.patch")
+                      (local-file "emacs-org-ox-html.patch")))))))
 
 
 (define-public my-emacs-flyspell-correct
