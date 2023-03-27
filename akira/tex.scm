@@ -336,22 +336,6 @@ customization/finetuning of the visual appearance.")
     (license lppl1.3+)))
 
 
-(define-public texlive-catchfile
-  (package
-    (inherit (simple-texlive-package "texlive-catchfile"
-                                     (list "doc/latex/catchfile/"
-                                           "source/latex/catchfile/"
-                                           "tex/generic/catchfile/")
-                                     (base32
-                                      "1dpxy64hs0bjp8d2dmikflc995vazf7fi6z92w51fnj2fidgl8gx")
-                                     #:trivial? #t))
-    (home-page "https://ctan.org/macros/latex/contrib/catchfile")
-    (synopsis "Catch an external file into a macro")
-    (description
-     "This package catches the contents of a file and puts it in a macro.  It requires
-e-TeX.  Both LaTeX and plain TeX are supported.")
-    (license lppl1.3+)))
-
 (define-public texlive-transparent
   (package
     (inherit (simple-texlive-package "texlive-transparent"
@@ -805,7 +789,7 @@ original tensor package by Mike Piff.")
         texlive-underscore ; needed by maptlotlib
         texlive-stringenc
         texlive-cellspace
-        texlive-generic-soul
+        texlive-soul
         texlive-moderncv
         texlive-fontawesome5 ; for moderncv
         texlive-academicons ; for moderncv

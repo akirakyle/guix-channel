@@ -89,7 +89,9 @@ then the snippet is triggered!")
        (inherit (package-source (emacs-xyz-latest emacs-jupyter)))
        ;; https://github.com/nnicandro/emacs-jupyter/issues/380
        ;; can be triggered with raise Exception in python block
-       (patches (list (local-file "emacs-jupyter.patch")))))
+       (patches (list (local-file "emacs-jupyter.patch")
+                      ;; https://github.com/nnicandro/emacs-jupyter/pull/442
+                      (local-file "emacs-jupyter-latex.patch")))))
     (propagated-inputs (modify-inputs (package-propagated-inputs
                                        (emacs-xyz-latest emacs-jupyter))
                          (delete "emacs-company")
