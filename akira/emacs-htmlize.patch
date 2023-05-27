@@ -1,0 +1,30 @@
+diff --git a/htmlize.el b/htmlize.el
+index b158a65..6346a6c 100644
+--- a/htmlize.el
++++ b/htmlize.el
+@@ -1033,15 +1033,16 @@ If no rgb.txt file is found, return nil."
+          (head face-list)
+          (tail face-list))
+     (while head
+-      (let ((inherit (face-attribute (car head) :inherit)))
+-        (cond ((listp inherit)
+-               (setcdr tail (cl-copy-list inherit))
+-               (setq tail (last tail)))
+-              ((eq inherit 'unspecified))
+-              (t
+-               (setcdr tail (list inherit))
+-               (setq tail (cdr tail)))))
+-      (pop head))
++      (when (facep (car head))
++        (let ((inherit (face-attribute (car head) :inherit)))
++          (cond ((listp inherit)
++                 (setcdr tail (cl-copy-list inherit))
++                 (setq tail (last tail)))
++                ((eq inherit 'unspecified))
++                (t
++                 (setcdr tail (list inherit))
++                 (setq tail (cdr tail))))))
++        (pop head))
+     (let ((size-list
+            (cl-loop
+             for f in face-list

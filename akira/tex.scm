@@ -363,7 +363,7 @@ colour).")
                                       "13cjsjb3b04n9arwp46ayk8fcicylxq5g1864cpxl1lxjxh1yi0l")
                                      #:trivial? #t))
     (propagated-inputs (list texlive-fvextra
-                             texlive-latex-fancyvrb
+                             texlive-fancyvrb
                              texlive-lineno
                              texlive-latex-framed))
     (home-page "https://ctan.org/macros/latex/contrib/minted")
@@ -483,7 +483,7 @@ high precision.")
                         ;texlive-xunicode
                         texlive-lm
                         texlive-latex-l3packages
-                        texlive-generic-iftex
+                        texlive-iftex
                         ;texlive-euenc
                         ))
     (home-page "https://ctan.org/macros/unicodetex/latex/fontspec")
@@ -509,10 +509,10 @@ xparse bundles from the LaTeX3 development team.")
                              texlive-tools
                              texlive-microtype
                              texlive-latex-l3packages
-                             texlive-generic-iftex
+                             texlive-iftex
                              texlive-hyperref
-                             texlive-latex-graphics
-                             texlive-latex-fancyhdr
+                             texlive-graphics
+                             texlive-fancyhdr
                              texlive-etoolbox
                              texlive-arydshln))
     (home-page "https://ctan.org/macros/latex/contrib/moderncv")
@@ -704,7 +704,7 @@ and xkeyval.")
                                      (base32
                                       "1yndmpghf3z5jddr3zcm5xw7v7zb6715d870ckjd5gifkvyv3nsy")
                                      #:trivial? #t))
-    (propagated-inputs (list texlive-pgfopts texlive-generic-iftex))
+    (propagated-inputs (list texlive-pgfopts texlive-iftex))
     (home-page "https://ctan.org/graphics/pgf/contrib/tikz-feynman")
     (synopsis "Feynman diagrams with TikZ")
     (description
@@ -775,8 +775,8 @@ original tensor package by Mike Piff.")
         texlive-latex-ifplatform
         texlive-catchfile
         texlive-transparent
-        texlive-latex-titlesec
-        texlive-latex-fancyhdr
+        texlive-titlesec
+        texlive-fancyhdr
         texlive-minted
         texlive-beamertheme-metropolis
         texlive-latex-hanging ; for metropolis?

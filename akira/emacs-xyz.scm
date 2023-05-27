@@ -4,7 +4,9 @@
   #:use-module (guix gexp)
   #:use-module (guix git-download)
   #:use-module (guix build-system emacs)
+  #:use-module (gnu packages)
   #:use-module (gnu packages mail)
+  #:use-module (gnu packages emacs)
   #:use-module (gnu packages emacs-xyz)
   #:use-module (emacs-latest utils)
   #:use-module (emacs-latest emacs-xyz))
@@ -89,13 +91,21 @@ then the snippet is triggered!")
        (inherit (package-source (emacs-xyz-latest emacs-jupyter)))
        ;; https://github.com/nnicandro/emacs-jupyter/issues/380
        ;; can be triggered with raise Exception in python block
-       (patches (list (local-file "emacs-jupyter.patch")
+       (patches (list ;(local-file "emacs-jupyter.patch")
                       ;; https://github.com/nnicandro/emacs-jupyter/pull/442
                       (local-file "emacs-jupyter-latex.patch")))))
     (propagated-inputs (modify-inputs (package-propagated-inputs
                                        (emacs-xyz-latest emacs-jupyter))
                          (delete "emacs-company")
                          (delete "emacs-markdown-mode")))))
+
+(define-public my-emacs-htmlize
+  (package
+    (inherit (emacs-xyz-latest emacs-htmlize))
+    (source
+     (origin
+       (inherit (package-source (emacs-xyz-latest emacs-htmlize)))
+       (patches (list (local-file "emacs-htmlize.patch")))))))
 
 (define-public my-emacs-org
   (package
@@ -117,15 +127,63 @@ then the snippet is triggered!")
                          (delete "emacs-ivy")
                          (delete "emacs-popup")))))
 
-;(define-public mu-latest
-;  (package-commit mu
-;                  "c23dad70586bbb54891c506629f2ce2ed8e463d2"
-;                  "0hy6vxsj18wdghgc7h5v3asw23j5cnr0vamk7x8idg74n75sg6nm"))
+(define-public emacs-nerd-icons
+  (package
+    (name "emacs-nerd-icons")
+    (version "20230520.1705")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/rainstormstudio/nerd-icons.el.git")
+                    (commit "099cbe3b5a8a253209d81320ad1389eb3d31fdc3")))
+              (sha256
+               (base32
+                "1kcyk1yln0gsw8bgnbmjhz88ywy87b48zpksh827giai7c0r1nfy"))))
+    (build-system emacs-build-system)
+    (arguments '(#:include '("\\.el$")))
+    (home-page "https://github.com/rainstormstudio/nerd-icons.el")
+    (synopsis "Emacs Nerd Font Icons Library")
+    (description
+     "This package was inspired by all-the-icons, vim-devicons for Vim,
+nvim-web-devicons for NeoVim. This package provides an interface to the
+Nerd Fonts found at https://github.com/ryanoasis/nerd-fonts")
+    (license license:gpl3+)))
+
+(define-public my-emacs-doom-modeline
+  (package
+    (inherit (emacs-xyz-latest emacs-doom-modeline))
+    (propagated-inputs (modify-inputs (package-propagated-inputs
+                                       (emacs-xyz-latest emacs-doom-modeline))
+                         (replace "emacs-all-the-icons" emacs-nerd-icons)))))
+
+(define-public my-emacs-next-pgtk
+  (package
+    (inherit emacs-next-pgtk)
+    (name "emacs-next-pgtk")
+    (version "30.0.50-e77e9")
+    (source
+     (origin
+       (inherit (package-source emacs-next-pgtk))
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://git.savannah.gnu.org/git/emacs.git/")
+             (commit "e77e986a9b7d735c0e39198c8b80a34a29005fc5")))
+       (file-name (git-file-name name version))
+       (patches (cons
+                 (local-file "emacs-native-comp-driver-options.patch")
+                 (search-patches "emacs-exec-path.patch"
+                                 "emacs-fix-scheme-indent-function.patch"
+                                 "emacs-pgtk-super-key-fix.patch")))
+       (sha256
+        (base32
+         "1gwr4jzkyf6qrf0jw874avpvwx785fah1ib33kqcixhvxfq05gj5"))))))
 
 (define-public my-emacs-replacements
   (package-input-rewriting
    `((,(emacs-xyz-latest emacs-jupyter) . ,my-emacs-jupyter)
      (,(emacs-xyz-latest emacs-flyspell-correct) . ,my-emacs-flyspell-correct)
+     (,(emacs-xyz-latest emacs-doom-modeline) . ,my-emacs-doom-modeline)
+     (,(emacs-xyz-latest emacs-htmlize) . ,my-emacs-htmlize)
      (,(emacs-xyz-latest emacs-org) . ,my-emacs-org))))
 
 (define-public %all-my-emacs-packages
@@ -177,12 +235,14 @@ then the snippet is triggered!")
        emacs-pdf-tools
        emacs-magit
        emacs-auctex
-       emacs-geiser-guile
+       ;emacs-geiser-guile
        emacs-julia-mode
        emacs-haskell-mode
        emacs-markdown-mode
        emacs-json-mode
        emacs-gcmh
        emacs-jupyter
+       emacs-esxml
+       emacs-simple-httpd
        mu
        ))))
